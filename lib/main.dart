@@ -15,6 +15,27 @@ Future<Joke> fetchJoke() async {
   }
 }
 
+_showGuide(BuildContext context) {
+  return showDialog(
+      useRootNavigator: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Guide"),
+          content: const Text("- Press button \"I like it! More\" to get new joke about Chuck Norris\n- Click \"About developers to"
+              " get personal information about them\n- Swipe left/right to get new joke\n\nFunny jokes to you!"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("OK"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      });
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -67,6 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _getNewJoke();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _showGuide(context));
   }
 
   void _getNewJoke() {
