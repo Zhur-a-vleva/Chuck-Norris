@@ -143,11 +143,23 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _getNewJoke,
               label: Text("I like it! More", style: TextStyle(fontSize: 20)),
             ),
-            // TextButton(
-            //   child: Text("About developers",
-            //       style: TextStyle(color: Colors.blueGrey, fontSize: 10)),
-            //   onPressed: () {},
-            // ),
+            TextButton(
+              child: Text("About developers",
+                  style: TextStyle(color: Colors.blueGrey, fontSize: 10)),
+              onPressed: () => showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Developer\'s information'),
+                  content: const Text('Name: Dasha Zhuravleva\nStatus: Student of Innopolis University\nMessage: Have a nice day ;)'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Nice'),
+                      child: const Text('Nice'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       )),
