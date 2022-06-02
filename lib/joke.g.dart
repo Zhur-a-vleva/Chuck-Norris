@@ -14,7 +14,7 @@ Joke _$JokeFromJson(Map<String, dynamic> json) => Joke(
     );
 
 Map<String, dynamic> _$JokeToJson(Joke instance) => <String, dynamic>{
-      'icon_url': instance.icon_url,
+      'icon_url': instance.iconUrl,
       'id': instance.id,
       'url': instance.url,
       'value': instance.value,
