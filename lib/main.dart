@@ -96,73 +96,89 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
       ),
-      body: Center(
-          child: SafeArea(
-        left: true,
-        top: true,
-        right: true,
-        minimum: const EdgeInsets.all(20.0),
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-                padding: const EdgeInsets.only(bottom: 40.0),
-                child: FutureBuilder<Joke>(
-                  future: _joke,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(snapshot.data!.value,
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(fontSize: 15));
-                    } else if (snapshot.hasError) {
-                      return Text('${snapshot.error}');
-                    }
-                    // By default, show a loading spinner.
-                    return const CircularProgressIndicator();
-                  },
-                )),
-            FloatingActionButton.extended(
-              backgroundColor: Colors.blue,
-              elevation: 10,
-              onPressed: _getNewJoke,
-              label: Text("I like it! More", style: TextStyle(fontSize: 20)),
-            ),
-            TextButton(
-              child: Text("About developers",
-                  style: TextStyle(color: Colors.blueGrey, fontSize: 10)),
-              onPressed: () => showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: const Text('Developer\'s information'),
-                  content: const Text('Name: Dasha Zhuravleva\nStatus: Student of Innopolis University\nMessage: Have a nice day ;)'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'Nice'),
-                      child: const Text('Nice'),
+      body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onHorizontalDragUpdate: (details) {
+            int sensitivity = 8;
+            // Swiping in right direction.
+            if (details.delta.dx > sensitivity) {
+              _getNewJoke();
+            }
+            // Swiping in left direction.
+            if (details.delta.dx < -sensitivity) {
+              _getNewJoke();
+            }
+          },
+          child: Center(
+            child: SafeArea(
+              left: true,
+              top: true,
+              right: true,
+              minimum: const EdgeInsets.all(20.0),
+              // Center is a layout widget. It takes a single child and positions it
+              // in the middle of the parent.
+              child: Column(
+                // Column is also a layout widget. It takes a list of children and
+                // arranges them vertically. By default, it sizes itself to fit its
+                // children horizontally, and tries to be as tall as its parent.
+                //
+                // Invoke "debug painting" (press "p" in the console, choose the
+                // "Toggle Debug Paint" action from the Flutter Inspector in Android
+                // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+                // to see the wireframe for each widget.
+                //
+                // Column has various properties to control how it sizes itself and
+                // how it positions its children. Here we use mainAxisAlignment to
+                // center the children vertically; the main axis here is the vertical
+                // axis because Columns are vertical (the cross axis would be
+                // horizontal).
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(bottom: 40.0),
+                      child: FutureBuilder<Joke>(
+                        future: _joke,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(snapshot.data!.value,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(fontSize: 15));
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          }
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator();
+                        },
+                      )),
+                  FloatingActionButton.extended(
+                    backgroundColor: Colors.blue,
+                    elevation: 10,
+                    onPressed: _getNewJoke,
+                    label:
+                        Text("I like it! More", style: TextStyle(fontSize: 20)),
+                  ),
+                  TextButton(
+                    child: Text("About developers",
+                        style: TextStyle(color: Colors.blueGrey, fontSize: 10)),
+                    onPressed: () => showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Developer\'s information'),
+                        content: const Text(
+                            'Name: Dasha Zhuravleva\nStatus: Student of Innopolis University\nMessage: Have a nice day ;)'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'Nice'),
+                            child: const Text('Nice'),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      )),
+          )),
     );
   }
 }
