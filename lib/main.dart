@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'joke.dart';
 
@@ -119,6 +120,9 @@ class HomeStateful extends StatefulWidget {
 class _Home extends State<HomeStateful> {
   late Future<Joke> _joke;
   Color _favoriteColor = Colors.grey;
+  late SharedPreferences _prefs;
+  List<String> _savedJokes = [];
+  String _savedJokesKey = "SAVED_JOKES_KEY";
 
   /// This function fetches joke, and when the result is ready update the state
   void _getNewJoke() {
@@ -137,14 +141,20 @@ class _Home extends State<HomeStateful> {
     }
   }
 
-  void _addToStorage() {
+  void _addToStorage() async {
+    if (_prefs == null) {
+      _prefs = await SharedPreferences.getInstance();
+    }
     setState(() {
       if (_favoriteColor == Colors.grey) {
         _favoriteColor = Colors.red;
+        _joke.then((joke) => _savedJokes.add(joke.value));
       } else {
         _favoriteColor = Colors.grey;
+        _joke.then((joke) => _savedJokes.remove(joke.value));
       }
     });
+    await _prefs.setStringList(_savedJokesKey, _savedJokes);
   }
 
   @override
@@ -206,8 +216,7 @@ class _Home extends State<HomeStateful> {
                             style: TextStyle(fontSize: 20)),
                       ),
                       IconButton(
-                          icon:
-                              Icon(Icons.favorite, color: _favoriteColor),
+                          icon: Icon(Icons.favorite, color: _favoriteColor),
                           onPressed: _addToStorage),
                     ]),
                 // Button for getting information about developers
