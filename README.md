@@ -16,6 +16,5 @@ Visual and functional features of the app:
 ![3](https://user-images.githubusercontent.com/57557659/171667462-2f498bb8-8c40-4469-97a1-cdf4ea1f67ad.png)
 ![4](https://user-images.githubusercontent.com/57557659/171667468-506728be-ed68-4552-82b9-14f6b76fcaa6.png)
 
-
-
 ## APK
+[app-release.zip](https://github.com/Zhur-a-vleva/Chuck-Norris/files/8825869/app-release.zip)
