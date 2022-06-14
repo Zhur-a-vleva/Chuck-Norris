@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.blue,
         onTap: _onItemTapped,
       ),
     );
@@ -118,6 +118,7 @@ class HomeStateful extends StatefulWidget {
 
 class _Home extends State<HomeStateful> {
   late Future<Joke> _joke;
+  Color _favoriteColor = Colors.grey;
 
   /// This function fetches joke, and when the result is ready update the state
   void _getNewJoke() {
@@ -134,6 +135,16 @@ class _Home extends State<HomeStateful> {
     } else {
       throw Exception('Failed to load Joke');
     }
+  }
+
+  void _addToStorage() {
+    setState(() {
+      if (_favoriteColor == Colors.grey) {
+        _favoriteColor = Colors.red;
+      } else {
+        _favoriteColor = Colors.grey;
+      }
+    });
   }
 
   @override
@@ -183,16 +194,22 @@ class _Home extends State<HomeStateful> {
                         return const CircularProgressIndicator();
                       },
                     )),
-
-                // Button for fetching random jokes
-                FloatingActionButton.extended(
-                  backgroundColor: Colors.blue,
-                  elevation: 10,
-                  onPressed: _getNewJoke,
-                  label: const Text("I like it! More",
-                      style: TextStyle(fontSize: 20)),
-                ),
-
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // Button for fetching random jokes
+                      FloatingActionButton.extended(
+                        backgroundColor: Colors.blue,
+                        elevation: 10,
+                        onPressed: _getNewJoke,
+                        label: const Text("I like it! More",
+                            style: TextStyle(fontSize: 20)),
+                      ),
+                      IconButton(
+                          icon:
+                              Icon(Icons.favorite, color: _favoriteColor),
+                          onPressed: _addToStorage),
+                    ]),
                 // Button for getting information about developers
                 TextButton(
                   child: const Text("About developers",
