@@ -10,6 +10,8 @@ void main() {
   runApp(const MyApp());
 }
 
+List<String> savedJokes = [];
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -121,13 +123,14 @@ class _Home extends State<HomeStateful> {
   late Future<Joke> _joke;
   Color _favoriteColor = Colors.grey;
   late SharedPreferences _prefs;
-  List<String> _savedJokes = [];
   String _savedJokesKey = "SAVED_JOKES_KEY";
 
   /// This function fetches joke, and when the result is ready update the state
   void _getNewJoke() {
     _joke = fetchJoke();
     _joke.then((joke) => setState(() {}));
+    _joke.then((joke) => _favoriteColor =
+        savedJokes.contains(joke.value) ? Colors.red : Colors.grey);
   }
 
   /// This function fetches joke from the API and either returns Future<Joke> or throws an exception
@@ -142,25 +145,32 @@ class _Home extends State<HomeStateful> {
   }
 
   void _addToStorage() async {
-    if (_prefs == null) {
-      _prefs = await SharedPreferences.getInstance();
-    }
     setState(() {
       if (_favoriteColor == Colors.grey) {
         _favoriteColor = Colors.red;
-        _joke.then((joke) => _savedJokes.add(joke.value));
+        _joke.then((joke) => savedJokes.add(joke.value));
       } else {
         _favoriteColor = Colors.grey;
-        _joke.then((joke) => _savedJokes.remove(joke.value));
+        _joke.then((joke) => savedJokes.remove(joke.value));
       }
     });
-    await _prefs.setStringList(_savedJokesKey, _savedJokes);
+    await _prefs.setStringList(_savedJokesKey, savedJokes);
   }
 
   @override
   void initState() {
     super.initState();
     _getNewJoke(); // Fetching first joke
+    _getPrefsAndData();
+  }
+
+  void _getPrefsAndData() async {
+    _prefs = await SharedPreferences.getInstance();
+    if (_prefs.getStringList(_savedJokesKey) != null) {
+      savedJokes = _prefs.getStringList(_savedJokesKey)!;
+    } else {
+      savedJokes = [];
+    }
   }
 
   @override
@@ -250,8 +260,19 @@ class Favorite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Page', style: Theme.of(context).textTheme.headline6),
-    );
+    return ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: savedJokes.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              color: Colors.white,
+              elevation: 10,
+              child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text('${savedJokes[index]}')));
+        });
   }
 }
