@@ -11,6 +11,8 @@ void main() {
 }
 
 List<String> savedJokes = [];
+late SharedPreferences prefs;
+String savedJokesKey = "SAVED_JOKES_KEY";
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -78,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _home = const HomeStateful();
-    _favorite = const Favorite();
+    _favorite = const FavoriteStateful();
     _pages = [_home, _favorite];
     _currentPage = _home;
     _selectedIndex = 0;
@@ -122,8 +124,6 @@ class HomeStateful extends StatefulWidget {
 class _Home extends State<HomeStateful> {
   late Future<Joke> _joke;
   Color _favoriteColor = Colors.grey;
-  late SharedPreferences _prefs;
-  String _savedJokesKey = "SAVED_JOKES_KEY";
 
   /// This function fetches joke, and when the result is ready update the state
   void _getNewJoke() {
@@ -154,7 +154,7 @@ class _Home extends State<HomeStateful> {
         _joke.then((joke) => savedJokes.remove(joke.value));
       }
     });
-    await _prefs.setStringList(_savedJokesKey, savedJokes);
+    await prefs.setStringList(savedJokesKey, savedJokes);
   }
 
   @override
@@ -165,9 +165,9 @@ class _Home extends State<HomeStateful> {
   }
 
   void _getPrefsAndData() async {
-    _prefs = await SharedPreferences.getInstance();
-    if (_prefs.getStringList(_savedJokesKey) != null) {
-      savedJokes = _prefs.getStringList(_savedJokesKey)!;
+    prefs = await SharedPreferences.getInstance();
+    if (prefs.getStringList(savedJokesKey) != null) {
+      savedJokes = prefs.getStringList(savedJokesKey)!;
     } else {
       savedJokes = [];
     }
@@ -255,8 +255,20 @@ class _Home extends State<HomeStateful> {
   }
 }
 
-class Favorite extends StatelessWidget {
-  const Favorite({Key? key}) : super(key: key);
+class FavoriteStateful extends StatefulWidget {
+  const FavoriteStateful({Key? key}) : super(key: key);
+
+  @override
+  State<FavoriteStateful> createState() => Favorite();
+}
+
+class Favorite extends State<FavoriteStateful> {
+  void _deleteJoke(int index) async {
+    setState(() {
+      savedJokes.removeAt(index);
+    });
+    await prefs.setStringList(savedJokesKey, savedJokes);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -271,8 +283,19 @@ class Favorite extends StatelessWidget {
               color: Colors.white,
               elevation: 10,
               child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text('${savedJokes[index]}')));
+                  padding: EdgeInsets.only(left: 15, top: 15, bottom: 15),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                            child: Text('${savedJokes[index]}',
+                                textAlign: TextAlign.justify)),
+                        IconButton(
+                            onPressed: () {
+                              _deleteJoke(index);
+                            },
+                            icon: Icon(Icons.delete))
+                      ])));
         });
   }
 }
