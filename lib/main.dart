@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'joke.dart';
@@ -126,11 +127,22 @@ class _Home extends State<HomeStateful> {
   Color _favoriteColor = Colors.grey;
 
   /// This function fetches joke, and when the result is ready update the state
-  void _getNewJoke() {
-    _joke = fetchJoke();
-    _joke.then((joke) => setState(() {}));
-    _joke.then((joke) => _favoriteColor =
-        savedJokes.contains(joke.value) ? Colors.red : Colors.grey);
+  void _getNewJoke() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result) {
+      _joke = fetchJoke();
+      _joke.then((joke) => setState(() {}));
+      _joke.then((joke) => _favoriteColor =
+          savedJokes.contains(joke.value) ? Colors.red : Colors.grey);
+    } else {
+      setState(() {
+        _joke = Future(() {
+          return new Joke('', '', '',
+              "Chuck Norris advises you to check your internet connection!");
+        });
+        _joke.then((joke) => setState(() {}));
+      });
+    }
   }
 
   /// This function fetches joke from the API and either returns Future<Joke> or throws an exception
@@ -145,16 +157,22 @@ class _Home extends State<HomeStateful> {
   }
 
   void _addToStorage() async {
-    setState(() {
-      if (_favoriteColor == Colors.grey) {
-        _favoriteColor = Colors.red;
-        _joke.then((joke) => savedJokes.add(joke.value));
-      } else {
-        _favoriteColor = Colors.grey;
-        _joke.then((joke) => savedJokes.remove(joke.value));
-      }
-    });
-    await prefs.setStringList(savedJokesKey, savedJokes);
+    String text = "";
+    _joke.then((joke) => text = joke.value);
+    if (text.compareTo(
+            "Chuck Norris advises you to check your internet connection!") ==
+        0) {
+      setState(() {
+        if (_favoriteColor == Colors.grey) {
+          _favoriteColor = Colors.red;
+          savedJokes.add(text);
+        } else {
+          _favoriteColor = Colors.grey;
+          savedJokes.remove(text);
+        }
+      });
+      await prefs.setStringList(savedJokesKey, savedJokes);
+    }
   }
 
   @override
