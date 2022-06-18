@@ -30,18 +30,18 @@ class Favorite extends State<FavoriteStateful> {
               color: Colors.white,
               elevation: 10,
               child: Padding(
-                  padding: EdgeInsets.only(left: 15, top: 15, bottom: 15),
+                  padding: const EdgeInsets.only(left: 15, top: 15, bottom: 15),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Flexible(
-                            child: Text('${savedJokes[index]}',
+                            child: Text(savedJokes[index],
                                 textAlign: TextAlign.justify)),
                         IconButton(
                             onPressed: () {
                               _deleteJoke(index);
                             },
-                            icon: Icon(Icons.delete))
+                            icon: const Icon(Icons.delete))
                       ])));
         });
   }

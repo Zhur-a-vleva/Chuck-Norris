@@ -32,7 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Future<Joke> _joke;
   late List<Widget> _pages;
   late Widget _home;
   late Widget _favorite;

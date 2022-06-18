@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -52,7 +51,7 @@ class _Home extends State<HomeStateful> {
     } else {
       setState(() {
         _joke = Future(() {
-          return new Joke('', '', '',
+          return Joke('', '', '',
               "Chuck Norris advises you to check your internet connection!");
         });
         _joke.then((joke) => setState(() {}));
@@ -64,16 +63,15 @@ class _Home extends State<HomeStateful> {
   Future<Joke> fetchJoke() async {
     if (_selectedCategory == "all") {
       final response =
-      await http.get(Uri.parse('https://api.chucknorris.io/jokes/random'));
+          await http.get(Uri.parse('https://api.chucknorris.io/jokes/random'));
       if (response.statusCode == 200) {
         return Joke.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to load Joke');
       }
-    }
-    else {
-      final response =
-      await http.get(Uri.parse('https://api.chucknorris.io/jokes/random?category=$_selectedCategory'));
+    } else {
+      final response = await http.get(Uri.parse(
+          'https://api.chucknorris.io/jokes/random?category=$_selectedCategory'));
       if (response.statusCode == 200) {
         return Joke.fromJson(jsonDecode(response.body));
       } else {
@@ -117,12 +115,6 @@ class _Home extends State<HomeStateful> {
     }
   }
 
-  void _changeCategory(String newCategory) {
-    setState(() {
-      _selectedCategory = newCategory;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -148,91 +140,98 @@ class _Home extends State<HomeStateful> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                const Padding(padding: EdgeInsets.only(left: 15, top: 15),
-                  child: Text("Select category:", style: TextStyle(color: Colors.blueGrey, fontSize: 15))),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 200, left: 15, right: 15),
-                  child: DropdownButton<String>(
-                    value: _selectedCategory,
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.blue),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.blue,
-                    ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedCategory = newValue!;
-                      });
-                    },
-                    items: _categories
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    isExpanded: true,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
+                    const Padding(
+                        padding: EdgeInsets.only(left: 15, top: 15),
+                        child: Text("Select category:",
+                            style: TextStyle(
+                                color: Colors.blueGrey, fontSize: 15))),
                     Padding(
-                        padding: const EdgeInsets.only(bottom: 40.0),
-                        child: FutureBuilder<Joke>(
-                          future: _joke,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Text(snapshot.data!.value,
-                                  textAlign: TextAlign.justify,
-                                  style: const TextStyle(fontSize: 15));
-                            } else if (snapshot.hasError) {
-                              return Text('${snapshot.error}');
-                            }
-                            // By default, show a loading spinner
-                            return const CircularProgressIndicator();
-                          },
-                        )),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          // Button for fetching random jokes
-                          FloatingActionButton.extended(
-                            backgroundColor: Colors.blue,
-                            elevation: 10,
-                            onPressed: _getNewJoke,
-                            label: const Text("I like it! More",
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                          IconButton(
-                              icon: Icon(Icons.favorite, color: _favoriteColor),
-                              onPressed: _addToStorage),
-                        ]),
-                    // Button for getting information about developers
-                    TextButton(
-                      child: const Text("About developers",
-                          style:
-                              TextStyle(color: Colors.blueGrey, fontSize: 10)),
-                      onPressed: () => showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Developer\'s information'),
-                          content: const Text(
-                              'Name: Dasha Zhuravleva\nStatus: Student of Innopolis University\nMessage: Have a nice day ;)'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Nice'),
-                              child: const Text('Nice'),
-                            ),
-                          ],
+                      padding: const EdgeInsets.only(
+                          bottom: 200, left: 15, right: 15),
+                      child: DropdownButton<String>(
+                        value: _selectedCategory,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.blue),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.blue,
                         ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedCategory = newValue!;
+                          });
+                        },
+                        items: _categories
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        isExpanded: true,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                       ),
                     ),
-                  ],
-                ),
-              ]))),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                            padding: const EdgeInsets.only(bottom: 40.0),
+                            child: FutureBuilder<Joke>(
+                              future: _joke,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(snapshot.data!.value,
+                                      textAlign: TextAlign.justify,
+                                      style: const TextStyle(fontSize: 15));
+                                } else if (snapshot.hasError) {
+                                  return Text('${snapshot.error}');
+                                }
+                                // By default, show a loading spinner
+                                return const CircularProgressIndicator();
+                              },
+                            )),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              // Button for fetching random jokes
+                              FloatingActionButton.extended(
+                                backgroundColor: Colors.blue,
+                                elevation: 10,
+                                onPressed: _getNewJoke,
+                                label: const Text("I like it! More",
+                                    style: TextStyle(fontSize: 20)),
+                              ),
+                              IconButton(
+                                  icon: Icon(Icons.favorite,
+                                      color: _favoriteColor),
+                                  onPressed: _addToStorage),
+                            ]),
+                        // Button for getting information about developers
+                        TextButton(
+                          child: const Text("About developers",
+                              style: TextStyle(
+                                  color: Colors.blueGrey, fontSize: 10)),
+                          onPressed: () => showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Developer\'s information'),
+                              content: const Text(
+                                  'Name: Dasha Zhuravleva\nStatus: Student of Innopolis University\nMessage: Have a nice day ;)'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Nice'),
+                                  child: const Text('Nice'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]))),
     );
   }
 }
