@@ -9,25 +9,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../global_variables.dart';
 import '../joke.dart';
 
-String _selectedLocation = 'All';
-List<String> _locations = [
-  "All",
-  "Animal",
-  "Career",
-  "Celebrity",
-  "Dev",
-  "Explicit",
-  "Fashion",
-  "Food",
-  "History",
-  "Money",
-  "Movie",
-  "Music",
-  "Political",
-  "Religion",
-  "Science",
-  "Sport",
-  "Travel"
+String _selectedCategory = 'all';
+List<String> _categories = [
+  "all",
+  "animal",
+  "career",
+  "celebrity",
+  "dev",
+  "explicit",
+  "fashion",
+  "food",
+  "history",
+  "money",
+  "movie",
+  "music",
+  "political",
+  "religion",
+  "science",
+  "sport",
+  "travel"
 ];
 
 class HomeStateful extends StatefulWidget {
@@ -62,12 +62,23 @@ class _Home extends State<HomeStateful> {
 
   /// This function fetches joke from the API and either returns Future<Joke> or throws an exception
   Future<Joke> fetchJoke() async {
-    final response =
-        await http.get(Uri.parse('https://api.chucknorris.io/jokes/random'));
-    if (response.statusCode == 200) {
-      return Joke.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load Joke');
+    if (_selectedCategory == "all") {
+      final response =
+      await http.get(Uri.parse('https://api.chucknorris.io/jokes/random'));
+      if (response.statusCode == 200) {
+        return Joke.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load Joke');
+      }
+    }
+    else {
+      final response =
+      await http.get(Uri.parse('https://api.chucknorris.io/jokes/random?category=$_selectedCategory'));
+      if (response.statusCode == 200) {
+        return Joke.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load Joke');
+      }
     }
   }
 
@@ -108,7 +119,7 @@ class _Home extends State<HomeStateful> {
 
   void _changeCategory(String newCategory) {
     setState(() {
-      _selectedLocation = newCategory;
+      _selectedCategory = newCategory;
     });
   }
 
@@ -142,7 +153,7 @@ class _Home extends State<HomeStateful> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 200, left: 15, right: 15),
                   child: DropdownButton<String>(
-                    value: _selectedLocation,
+                    value: _selectedCategory,
                     elevation: 16,
                     style: const TextStyle(color: Colors.blue),
                     underline: Container(
@@ -151,10 +162,10 @@ class _Home extends State<HomeStateful> {
                     ),
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedLocation = newValue!;
+                        _selectedCategory = newValue!;
                       });
                     },
-                    items: _locations
+                    items: _categories
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
