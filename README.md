@@ -11,10 +11,13 @@ Visual and functional features of the app:
 - Personal information about developers
 
 ## Screenshots
-![1](https://user-images.githubusercontent.com/57557659/171667216-abc828eb-d5b0-4170-8a3f-468073055fde.png)
-![2](https://user-images.githubusercontent.com/57557659/171667454-4b2dd389-54c3-4c19-a7c3-4b1420c55262.png)
-![3](https://user-images.githubusercontent.com/57557659/171667462-2f498bb8-8c40-4469-97a1-cdf4ea1f67ad.png)
-![4](https://user-images.githubusercontent.com/57557659/171667468-506728be-ed68-4552-82b9-14f6b76fcaa6.png)
+![1](https://user-images.githubusercontent.com/57557659/174474634-7971593f-d390-4ecc-99ba-2cf6451ac9a0.png)
+![2](https://user-images.githubusercontent.com/57557659/174474640-9322e7de-3624-486f-92f9-d37f1e439a60.png)
+![3](https://user-images.githubusercontent.com/57557659/174474770-92ae0e2b-21f2-4cfc-adfd-8f6f380275a8.png)
+![4](https://user-images.githubusercontent.com/57557659/174474647-eb7808a2-5eb4-43d4-8f65-3d01db32257a.png)
+![5](https://user-images.githubusercontent.com/57557659/174474651-8f9c42fc-2713-406b-8cf5-e5402ecbbba1.png)
+![6](https://user-images.githubusercontent.com/57557659/174474652-4b2aad31-fd07-4f62-8a1e-197bb8c7ece9.png)
+
 
 ## APK
-[app-release.zip](https://github.com/Zhur-a-vleva/Chuck-Norris/files/8825869/app-release.zip)
+[app-release.zip](https://github.com/Zhur-a-vleva/Chuck-Norris/files/8935074/app-release.zip)
