@@ -81,22 +81,19 @@ class _Home extends State<HomeStateful> {
   }
 
   void _addToStorage() async {
-    String text = "";
-    _joke.then((joke) => text = joke.value);
-    if (text.compareTo(
-            "Chuck Norris advises you to check your internet connection!") !=
-        0) {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result) {
       setState(() {
         if (_favoriteColor == Colors.grey) {
           _favoriteColor = Colors.red;
-          savedJokes.add(text);
+          _joke.then((joke) => savedJokes.add(joke.value));
         } else {
           _favoriteColor = Colors.grey;
-          savedJokes.remove(text);
+          _joke.then((joke) => savedJokes.remove(joke.value));
         }
       });
-      await prefs.setStringList(savedJokesKey, savedJokes);
     }
+    await prefs.setStringList(savedJokesKey, savedJokes);
   }
 
   @override
