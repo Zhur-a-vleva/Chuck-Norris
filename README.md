@@ -8,7 +8,10 @@ Visual and functional features of the app:
 - Minimalistic UI
 - Starting guide with the list of functional features
 - Random jokes that appear when button pressed or left/right swipe performed
+- Filtering random jokes by category
 - Personal information about developers
+- Saving favorite jokes
+- Searching any joke from the API
 
 ## Screenshots
 ![1](https://user-images.githubusercontent.com/57557659/174474634-7971593f-d390-4ecc-99ba-2cf6451ac9a0.png)
@@ -20,4 +23,4 @@ Visual and functional features of the app:
 
 
 ## APK
-[app-release.zip](https://github.com/Zhur-a-vleva/Chuck-Norris/files/8935074/app-release.zip)
+[app-release.zip](https://github.com/Zhur-a-vleva/Chuck-Norris/files/8935093/app-release.zip)
