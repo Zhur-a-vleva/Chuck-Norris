@@ -84,7 +84,7 @@ class _Home extends State<HomeStateful> {
     String text = "";
     _joke.then((joke) => text = joke.value);
     if (text.compareTo(
-            "Chuck Norris advises you to check your internet connection!") ==
+            "Chuck Norris advises you to check your internet connection!") !=
         0) {
       setState(() {
         if (_favoriteColor == Colors.grey) {
