@@ -2,7 +2,6 @@ import 'package:chuck_norris/screens/home_page.dart';
 import 'package:chuck_norris/screens/search_page.dart';
 import 'package:flutter/material.dart';
 
-import 'joke.dart';
 import 'screens/favorite_page.dart';
 
 void main() {
